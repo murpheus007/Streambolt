@@ -2,6 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawn } = require('child_process');
+const { logError, logInfo, logWarn } = require('./logger');
 
 const DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)...';
 const DEFAULT_MAX_FILE_SIZE = process.env.MAX_DOWNLOAD_SIZE || '30M';
@@ -27,20 +28,36 @@ function normalizeCookiesText(cookiesText) {
 
 function ensureCookiesFile() {
     if (DEFAULT_COOKIES_PATH) {
+        logInfo('Using yt-dlp cookies from file path.', {
+            cookiesPath: DEFAULT_COOKIES_PATH
+        });
         return DEFAULT_COOKIES_PATH;
     }
 
     let cookiesText = DEFAULT_COOKIES_TEXT;
 
     if (!cookiesText && DEFAULT_COOKIES_B64) {
-        cookiesText = Buffer.from(DEFAULT_COOKIES_B64, 'base64').toString('utf8');
+        try {
+            cookiesText = Buffer.from(DEFAULT_COOKIES_B64, 'base64').toString('utf8');
+            logInfo('Decoded yt-dlp cookies from base64 environment variable.', {
+                outputPath: TEMP_COOKIES_PATH,
+                decodedLength: cookiesText.length
+            });
+        } catch (error) {
+            logError('Failed to decode YTDLP_COOKIES_B64.', error);
+            throw error;
+        }
     }
 
     if (!cookiesText) {
+        logWarn('No yt-dlp cookies configured. Some providers may reject downloads.');
         return null;
     }
 
     fs.writeFileSync(TEMP_COOKIES_PATH, normalizeCookiesText(cookiesText), 'utf8');
+    logInfo('Wrote yt-dlp cookies to temp file.', {
+        outputPath: TEMP_COOKIES_PATH
+    });
     return TEMP_COOKIES_PATH;
 }
 
@@ -66,12 +83,34 @@ function createVideoDownloadProcess(url, options = {}) {
 
     args.push(url);
 
+    logInfo('Launching yt-dlp process.', {
+        url,
+        maxFileSize,
+        cookiesPath: cookiesPath || null,
+        hasUserAgent: Boolean(options.userAgent),
+        args
+    });
+
     const process = spawn('yt-dlp', args, {
         stdio: ['ignore', 'pipe', 'pipe']
     });
 
+    process.on('error', (error) => {
+        logError('yt-dlp process failed to spawn.', error);
+    });
+
     process.stderr.on('data', (data) => {
-        console.log(`yt-dlp log: ${data}`);
+        logWarn('yt-dlp stderr output received.', {
+            message: data.toString().trim()
+        });
+    });
+
+    process.on('close', (code, signal) => {
+        logInfo('yt-dlp process closed.', {
+            url,
+            code,
+            signal
+        });
     });
 
     return process;

@@ -8,3 +8,4 @@ backend/baileys_auth
 .DS_Store
 cookies.txt
 youtube-cookies.txt
+debug.log
