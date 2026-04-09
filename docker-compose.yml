@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/baileys_auth:/app/baileys_auth
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - BOT_TOKEN=${BOT_TOKEN}
+      - WHATSAPP_ENABLED=${WHATSAPP_ENABLED}
+    restart: unless-stopped

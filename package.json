@@ -1,0 +1,16 @@
+{
+  "name": "social-downloader",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently -k -n backend,frontend -c green,cyan \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "node --env-file=.env --watch backend/index.js",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build && rm -rf backend/public && cp -r frontend/dist backend/public",
+    "lint": "npm --prefix frontend run lint",
+    "start": "node --env-file=.env backend/index.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
