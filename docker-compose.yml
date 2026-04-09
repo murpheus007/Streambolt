@@ -2,15 +2,19 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:${PORT:-3000}"
     volumes:
       - ./backend/baileys_auth:/app/baileys_auth
     env_file:
       - .env
     environment:
       - NODE_ENV=production
+      - PORT=${PORT}
       - BOT_TOKEN=${BOT_TOKEN}
       - TELEGRAM_ENABLED=${TELEGRAM_ENABLED}
       - WHATSAPP_ENABLED=${WHATSAPP_ENABLED}
       - MAX_DOWNLOAD_SIZE=${MAX_DOWNLOAD_SIZE}
+      - YTDLP_COOKIES=${YTDLP_COOKIES}
+      - YTDLP_COOKIES_B64=${YTDLP_COOKIES_B64}
+      - YTDLP_COOKIES_PATH=${YTDLP_COOKIES_PATH}
     restart: "no"

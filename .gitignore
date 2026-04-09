@@ -6,3 +6,5 @@ backend/public/assets
 backend/baileys_auth
 .env
 .DS_Store
+cookies.txt
+youtube-cookies.txt

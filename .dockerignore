@@ -5,3 +5,5 @@ frontend/dist
 backend/baileys_auth
 .env
 .git
+cookies.txt
+youtube-cookies.txt
