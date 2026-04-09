@@ -8,10 +8,10 @@ const { startWhatsAppBot } = require('./whatsapp');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const BOT_ENABLED = Boolean(BOT_TOKEN);
+const TELEGRAM_ENABLED = process.env.TELEGRAM_ENABLED === 'true' && Boolean(BOT_TOKEN);
 const WHATSAPP_ENABLED = process.env.WHATSAPP_ENABLED === 'true';
 
-if (BOT_ENABLED) {
+if (TELEGRAM_ENABLED) {
     const bot = new Telegraf(BOT_TOKEN);
 
     bot.on('text', async (ctx) => {
@@ -38,9 +38,16 @@ if (BOT_ENABLED) {
         }
     });
 
-    bot.launch();
+    bot.launch({
+        dropPendingUpdates: true
+    }).catch((error) => {
+        console.error('Telegram bot failed to start:', error);
+    });
+
+    process.once('SIGINT', () => bot.stop('SIGINT'));
+    process.once('SIGTERM', () => bot.stop('SIGTERM'));
 } else {
-    console.warn('BOT_TOKEN is not set. Telegram bot startup skipped.');
+    console.warn('TELEGRAM_ENABLED is not true or BOT_TOKEN is missing. Telegram bot startup skipped.');
 }
 
 if (WHATSAPP_ENABLED) {
@@ -83,6 +90,10 @@ app.get('/api/download', (req, res) => {
         console.log('User cancelled download. Killing process.');
         ytDlp.kill();
     });
+});
+
+app.get(/^\/(?!api).*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {

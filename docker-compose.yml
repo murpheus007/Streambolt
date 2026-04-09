@@ -10,5 +10,7 @@ services:
     environment:
       - NODE_ENV=production
       - BOT_TOKEN=${BOT_TOKEN}
+      - TELEGRAM_ENABLED=${TELEGRAM_ENABLED}
       - WHATSAPP_ENABLED=${WHATSAPP_ENABLED}
-    restart: unless-stopped
+      - MAX_DOWNLOAD_SIZE=${MAX_DOWNLOAD_SIZE}
+    restart: "no"
