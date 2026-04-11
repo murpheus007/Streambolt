@@ -4,6 +4,9 @@ import { Helmet } from 'react-helmet-async'
 const TELEGRAM_BOT_URL =
   import.meta.env.VITE_TELEGRAM_BOT_URL || 'https://t.me/your_bot_username'
 
+const TELEGRAM_COMMUNITY_URL = 'https://t.me/streambolt_community'
+const SUPPORT_EMAIL = 'dreamgotwings@gmail.com'
+
 const updates = [
   'Apr 06: Added dev support and feedback',
   'Apr 05: Official launch',
@@ -76,15 +79,13 @@ function App() {
     try {
       await navigator.clipboard.writeText(message)
       setFeedbackStatus(
-        'Your message was copied. Telegram opened in a new tab so you can paste it to the dev.'
+        'Message copied to clipboard — paste it in the community chat or your email client.'
       )
     } catch {
       setFeedbackStatus(
-        'Telegram opened in a new tab. Copy your message manually if clipboard access was blocked.'
+        'Use the buttons below to reach us. Copy your message manually if needed.'
       )
     }
-
-    window.open(TELEGRAM_BOT_URL, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -219,9 +220,9 @@ function App() {
             id="feedback"
             className="mt-8 border border-stone-200 bg-white px-6 py-10 sm:px-10"
           >
-            <h2 className="text-2xl font-bold text-slate-950">Feedback</h2>
+            <h2 className="text-2xl font-bold text-slate-950">Community & Feedback</h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-              Send a note to the dev if something broke, a platform changed, or you want to suggest a feature.
+              Got a bug report, a feature idea, or just want to say hi? Write your message below, then send it via Telegram or email — whichever works best for you.
             </p>
 
             <form onSubmit={handleFeedbackSubmit} className="mt-6">
@@ -230,10 +231,10 @@ function App() {
               </label>
               <textarea
                 id="feedback-message"
-                rows="6"
+                rows="5"
                 value={feedbackMessage}
                 onChange={(event) => setFeedbackMessage(event.target.value)}
-                placeholder="Write your message here"
+                placeholder="Write your message here…"
                 className="w-full border border-stone-300 bg-stone-50 px-4 py-4 text-base text-slate-900 outline-none transition focus:border-emerald-500 rounded-none"
               />
 
@@ -242,27 +243,59 @@ function App() {
                   type="submit"
                   className="border border-emerald-950 bg-emerald-800 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 rounded-none"
                 >
-                  Send Feedback
+                  Copy Message
                 </button>
 
-                {feedbackStatus ? (
-                  <p className="text-sm text-slate-600">{feedbackStatus}</p>
-                ) : null}
+                <a
+                  href={TELEGRAM_COMMUNITY_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="border border-emerald-800 px-6 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-50 rounded-none text-center"
+                >
+                  Join Community on Telegram
+                </a>
+
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}?subject=StreamBolt Feedback`}
+                  className="border border-slate-400 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-stone-100 rounded-none text-center"
+                >
+                  Send via Email
+                </a>
               </div>
+
+              {feedbackStatus ? (
+                <p className="mt-3 text-sm text-slate-600">{feedbackStatus}</p>
+              ) : null}
             </form>
           </section>
 
           <footer className="mt-8 border border-emerald-950 bg-emerald-800 px-6 py-6 text-white sm:px-10">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm sm:text-base">Made with love by Morphis</p>
-              <a
-                href={TELEGRAM_BOT_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="border border-white px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 rounded-none"
-              >
-                Open Telegram Bot
-              </a>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={TELEGRAM_BOT_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="border border-white px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 rounded-none"
+                >
+                  Telegram Bot
+                </a>
+                <a
+                  href={TELEGRAM_COMMUNITY_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="border border-white px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 rounded-none"
+                >
+                  Community
+                </a>
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}`}
+                  className="border border-white px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 rounded-none"
+                >
+                  Email Us
+                </a>
+              </div>
             </div>
           </footer>
         </main>

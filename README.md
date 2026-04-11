@@ -216,6 +216,18 @@ streambolt/
 
 ---
 
+## Community & Feedback
+
+Have a question, found a bug, or want to suggest a feature? Reach out through any of the channels below:
+
+| Channel | Link |
+|---------|------|
+| 💬 **Telegram Community** | [t.me/streambolt_community](https://t.me/streambolt_community) — chat with the dev and other users |
+| 📧 **Email** | [dreamgotwings@gmail.com](mailto:dreamgotwings@gmail.com) — for detailed reports or private matters |
+| 🐛 **GitHub Issues** | [Open an issue](../../issues) — for bug reports and feature requests |
+
+---
+
 ## Contributing
 
 Contributions are welcome! Feel free to open issues or pull requests. Please keep PRs focused and include a clear description of the change.
